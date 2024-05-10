@@ -2,46 +2,21 @@ package main
 
 import (
 	"fmt"
-	"go-calculator-tutorial/calculate"
-	"strings"
+	calculator "go-calculator-tutorial/calculate"
+	computer "go-calculator-tutorial/computer"
 )
 
 func main() {
 
-	type calculator struct{
-		firstNumber float64;
-        secondNumber float64;
-        mathOperation string;
-	}
+	iphoneCalculator := calculator.IphoneCalculator{}
+	digitalCalculator := calculator.DigitalCalculator{}
 
-	c := calculator{firstNumber: 0, secondNumber: 0, mathOperation:""};
+	com1 := computer.NewComputer(iphoneCalculator)
+	com2 := computer.NewComputer(digitalCalculator)
 
-	fmt.Println("First Number:")
-	fmt.Scan(&c.firstNumber);
-	fmt.Println("Second Number:")
-	fmt.Scan(&c.secondNumber);
-	fmt.Println("Math Operation:")
-	fmt.Scan(&c.mathOperation)
+	result1 := com1.MultiplyNumber(2, 4)
+	result2 := com2.MultiplyNumber(2, 4)
 
-	switch strings.ToLower(c.mathOperation) {
-		case "addition":
-			ans, _ := calculate.Addition(c.firstNumber, c.secondNumber)
-			fmt.Printf("Answer: ")
-			fmt.Println(ans)
-		case "subtraction":
-			ans, _ := calculate.Subtraction(c.firstNumber, c.secondNumber)
-			fmt.Printf("Answer: ")
-			fmt.Println(ans)
-		case "multiplication":
-			ans, _ := calculate.Multiplication(c.firstNumber, c.secondNumber)
-			fmt.Printf("Answer: ")
-			fmt.Println(ans)
-		case "division":
-			ans, _ := calculate.Division(c.firstNumber, c.secondNumber)
-			fmt.Printf("Answer: ")
-			fmt.Println(ans)
-		default:
-			fmt.Println("Invalid Operation")
-	}
+	fmt.Println(result1, result2)
 
 }
