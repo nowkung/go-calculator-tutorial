@@ -1,0 +1,14 @@
+url:
+  key: "913da61969a3190ba9de6b5c094a0eb4"
+  location: "Bangkok"
+
+server:
+  address: ":1323"
+
+database:
+  driver: "mysql"
+  host: "localhost"
+  port: "3306"
+  user: "root"
+  password: "P@ssw0rd"
+  dbname: "weather"
