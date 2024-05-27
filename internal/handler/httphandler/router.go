@@ -11,6 +11,7 @@ type HttpServer struct {
 	server *echo.Echo
 	weatherHandler IWeatherHandler
 	unitHandler IUnitHandler
+	dbHandler IDBHandler
 }
 
 func NewHttpServer(
@@ -18,12 +19,14 @@ func NewHttpServer(
 	server *echo.Echo,
 	weatherHandler IWeatherHandler,
 	unitHandler IUnitHandler,
+	dbHandler IDBHandler,
 ) *HttpServer {
 	httpServer := &HttpServer{
 		conf:           conf,
 		server:         server,
 		weatherHandler: weatherHandler,
 		unitHandler:    unitHandler,
+		dbHandler: dbHandler,
 	}
 
 	httpServer.InitRoutes()
@@ -39,6 +42,12 @@ func (s *HttpServer) InitRoutes() {
 
 		unit := c.QueryParam("unit")
         return s.unitHandler.TemperatureWithUnit(c, unit)
+
+    })
+	e.GET("/temperature-by-id", func(c echo.Context) error {
+
+		id := c.QueryParam("id")
+        return s.dbHandler.GetTemperatureByID(c, id)
 
     })
 }

@@ -7,6 +7,8 @@ import (
 	repo "go-calculator-tutorial/internal/repository/temperature"
 	service "go-calculator-tutorial/internal/service"
 
+	"github.com/redis/go-redis/v9"
+
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 )
@@ -41,11 +43,23 @@ func main() {
 	conf.Database.User = viper.GetString("database.user")
 	conf.Database.Password =  viper.GetString("database.password")
 	conf.Database.DBname = viper.GetString("database.dbname")
+	conf.Redis.User = viper.GetString("redis.user")
+	conf.Redis.Password = viper.GetString("redis.password")
+	conf.Redis.Host = viper.GetString("redis.host")
+	conf.Redis.Port = viper.GetString("redis.port")
 
-	weatherRepo := repo.NewWeatherRepository(conf)
+	redisUrl := "redis://"+conf.Redis.User +":"+conf.Redis.Password+"@"+conf.Redis.Host+":"+conf.Redis.Port+"/0?protocol=3"
+	opts, err := redis.ParseURL(redisUrl)
+    if err != nil {
+        panic(err)
+    }
+    client := redis.NewClient(opts)
+
+	weatherRepo := repo.NewWeatherRepository(conf, client)
 	weatherServ := service.NewWeatherService(weatherRepo)
 	weatherHandler := handler.NewWeatherHandler(weatherServ)
 	unitHandler := handler.NewUnitHandler(weatherServ)
+	dbHandler := handler.NewDBHandler(weatherServ)
 	
 	e := echo.New()
 	e.GET("/time-temperature", weatherHandler.GetTemperature)
@@ -54,6 +68,12 @@ func main() {
 		unit := c.QueryParam("unit")
 		fmt.Print(unit)
         return unitHandler.TemperatureWithUnit(c, unit)
+
+    })
+	e.GET("/temperature-by-id", func(c echo.Context) error {
+
+		id := c.QueryParam("id")
+        return dbHandler.GetTemperatureByID(c, id)
 
     })
 	e.Logger.Fatal(e.Start(":1323"))

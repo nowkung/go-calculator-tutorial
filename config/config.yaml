@@ -7,8 +7,14 @@ server:
 
 database:
   driver: "mysql"
-  host: "localhost"
+  host: "127.0.0.1"
   port: "3306"
   user: "root"
   password: "P@ssw0rd"
   dbname: "weather"
+
+redis:
+  user: "default"
+  password: "mF1xm8R1VEMdljuYiphRdiCvKazw0IkK"
+  host: "redis-10316.c258.us-east-1-4.ec2.redns.redis-cloud.com"
+  port: "10316"

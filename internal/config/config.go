@@ -5,6 +5,7 @@ type AppConfig struct {
 	Server Server
 	Service Service
 	Database Database
+	Redis Redis
 }
 
 type Url struct {
@@ -27,4 +28,11 @@ type Database struct {
 	User string
 	Password string
 	DBname string
+}
+
+type Redis struct {
+	User string
+	Password string
+	Host string
+	Port string
 }
